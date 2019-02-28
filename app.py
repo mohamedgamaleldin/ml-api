@@ -1,3 +1,4 @@
+import numpy as np
 from flask import Flask, jsonify, request
 from sklearn.externals import joblib
 
@@ -9,17 +10,16 @@ def predict():
         try:
             data = request.get_json()
             model = joblib.load("./model.pkl")
-            input = []
+            query = []
 
             for key in data:
-                input.append(data[key])
+                query.append(data[key])
 
-            print(input)
+            input = np.array(query).reshape(1, -1)
 
         except ValueError:
             return jsonify("Invalid input data.")
 
-        input.reshape(1, -1)
         return jsonify(model.predict(input).tolist())
             
 
